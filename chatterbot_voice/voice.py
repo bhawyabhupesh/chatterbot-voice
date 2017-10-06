@@ -10,8 +10,6 @@ class VoiceInput(InputAdapter):
     def __init__(self, **kwargs):
         super(VoiceInput, self).__init__(**kwargs)
 
-        import warnings
-
         # Allow different speech recognition methods to be selected
         # See https://pypi.python.org/pypi/SpeechRecognition/
         self.recognizer_function = kwargs.get(
@@ -44,6 +42,8 @@ class VoiceInput(InputAdapter):
         input from your system. This command will try
         to start it when your program runs.
         """
+        import warnings
+
         try:
             subprocess.call(['jack_control', 'start'])
         except Exception:
