@@ -3,6 +3,10 @@ language: python
 python:
   - '3.4'
   - '2.7'
+  
+env:
+  - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$USER/bus
+  - DISPLAY=0
 
 before_install:
   - sudo apt-get install -y espeak python-espeak
