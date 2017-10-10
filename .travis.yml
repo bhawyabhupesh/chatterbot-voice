@@ -1,17 +1,10 @@
 language: python
 
 python:
-  - '2.7'
   - '3.6'
   
-env:
-  - DBUS_SESSION_BUS_ADDRESS=/dev/null
-  - DISPLAY=:99.0
-
-before_install:
-  - sudo apt-get install -y espeak python-espeak
-  - sudo apt-get install -y dbus python-dbus python-dbus-dev
-  - sudo apt-get install -y jackd2
+os:
+  - linux
 
 install:
   - pip install coveralls flake8
