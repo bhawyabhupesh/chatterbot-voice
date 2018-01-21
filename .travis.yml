@@ -1,8 +1,8 @@
 language: python
 
 python:
-  - '3.4'
   - '2.7'
+  - '3.6'
   
 env:
   - DBUS_SESSION_BUS_ADDRESS=/dev/null
