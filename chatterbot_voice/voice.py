@@ -42,16 +42,11 @@ class VoiceInput(InputAdapter):
         input from your system. This command will try
         to start it when your program runs.
         """
-        import warnings
-
         try:
             subprocess.call(['jack_control', 'start'])
         except Exception:
             # Note: jack_control is not a valid command in Windows
-            warnings.warn(
-                'Unable to start jack control.',
-                RuntimeWarning
-            )
+            self.logger.warning('Unable to start jack control.')
 
 
 class VoiceOutput(OutputAdapter):
@@ -63,19 +58,8 @@ class VoiceOutput(OutputAdapter):
 
         self.platform = platform.system().lower()
 
-    def speak(self, statement):
+    def get_espeak_call_result(self, text):
         import time
-
-        if self.platform == 'darwin':
-            # Use Mac's built-in say command to speak the response
-            cmd = ['say', str(statement.text)]
-
-            subprocess.call(
-                cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-            )
-
-            return statement.text
-
         from espeak import espeak
         from espeak import core as espeak_core
 
@@ -86,13 +70,26 @@ class VoiceOutput(OutputAdapter):
                 done_synth[0] = True
 
         espeak.set_SynthCallback(synth_callback)
-        call_result = espeak.synth(statement)
+        call_result = espeak.synth(text)
 
         # Wait for the speech to stop
         while call_result and not done_synth[0]:
             time.sleep(0.05)
 
         return call_result
+
+    def speak(self, statement):
+        if self.platform == 'darwin':
+            # Use Mac's built-in say command to speak the response
+            cmd = ['say', str(statement.text)]
+
+            subprocess.call(
+                cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            )
+
+            return statement.text
+
+        return self.get_espeak_call_result(statement)
 
     def process_response(self, statement, confidence=None):
         self.speak(statement.text)
