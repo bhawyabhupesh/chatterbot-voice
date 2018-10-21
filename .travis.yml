@@ -2,9 +2,6 @@ language: python
 
 python:
   - '3.6'
-  
-os:
-  - linux
 
 install:
   - pip install coveralls flake8
